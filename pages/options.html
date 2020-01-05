@@ -1,13 +1,66 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link href="../styles/main.css" rel="stylesheet" type="text/css">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link href="../vendor/bootstrap-italia.min.css" rel="stylesheet" type="text/css" />
+        <link href="../styles/main.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-        <div id="buttonDiv"> </div>
-        <div>
-            <p>Choose a different background color!</p>
+        <div class="it-header-slim-wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="it-header-slim-wrapper-content">
+                            <a class="d-lg-block navbar-brand" style="font-size: 1rem; font-weight: bold" href="/">LinkedIn integration bot</a>
+                            <div class="it-header-slim-right-zone">
+                                <div class="it-access-top-wrapper">
+                                    <button class="btn btn-primary btn-sm" id="button-linkedin" type="button">
+                                        <svg class="icon icon-white icon-sm"><use xlink:href="../images/sprite.svg#it-linkedin"></use></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <nav class="toolbar toolbar-small">
+            <ul>
+                <li>
+                    <a href="popup.html">
+                        <svg class="icon icon-sm"><use xlink:href="../images/sprite.svg#it-hearing"></use></svg>
+                        <span class="sr-only">Cerca profili</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="disabled" disabled aria-disabled="true">
+                        <svg class="icon icon-sm"><use xlink:href="../images/sprite.svg#it-presentation"></use></svg>
+                        <span class="sr-only">Contatta visitatori</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="options.html" class="active">
+                        <svg class="icon icon-sm"><use xlink:href="../images/sprite.svg#it-settings"></use></svg>
+                        <span class="sr-only">Impostazioni</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="container">
+            <div class="row">
+                <div class="col col-lg-10">
+                    <h3>Impostazioni</h3>
+                    <p>Impostazioni dell'estensione LinkedIn Autobot.</p>
+                </div>
+            </div>
+        </div>
+
+        <script src="../scripts/options.js"></script>
+
+        <script src="../vendor/bootstrap-italia.bundle.min.js"></script>
     </body>
-    <script src="../scripts/options.js"></script>
 </html>

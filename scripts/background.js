@@ -9,7 +9,7 @@ chrome.runtime.onInstalled.addListener(function() {
                 new chrome.declarativeContent.PageStateMatcher({
                     pageUrl: {
                         hostEquals: 'www.linkedin.com',
-                        urlContains: 'search/results/people'
+                        //urlContains: 'search/results/people'
                     },
                 })
             ],
