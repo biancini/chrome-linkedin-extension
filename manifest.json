@@ -10,7 +10,7 @@
     "options_page": "pages/options.html",
     "background": {
         "scripts": [ "scripts/background.js" ],
-        "persistent": true
+        "persistent": false
     },
     "page_action": {
         "default_popup": "pages/popup.html",
