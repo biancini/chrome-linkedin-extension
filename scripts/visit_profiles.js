@@ -2,10 +2,10 @@ function sleep(milliseconds) {
     return new Promise(r => setTimeout(r, milliseconds));
 }
 
-async function visitUser(name, href) {
+async function visitUser(name, href, port) {
     var oReq = new XMLHttpRequest();
     oReq.onload = function() {
-        console.log("Visited user " + name + ": " + href);
+        port.postMessage({terminated: false, name: name, href: href});
     };
     oReq.open("get", href, true);
     oReq.send();
@@ -26,6 +26,7 @@ async function moveToNextPage() {
 
 async function run() {
     var process = true;
+    var port = chrome.runtime.connect({name: "visitedProfiles"});
 
     while (process) {
         window.scrollTo(0, document.body.scrollHeight);
@@ -41,13 +42,13 @@ async function run() {
             
             if (!link) continue;
             var span = link.getElementsByClassName('actor-name')[0];
-            await visitUser(span.innerHTML, link.href);
+            await visitUser(span.innerHTML, link.href, port);
         }
 
         process = await moveToNextPage();
     }
 
-    console.log("Script ended.");
+    port.postMessage({terminated: true});
 }
 
 run();

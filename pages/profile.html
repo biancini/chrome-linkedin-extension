@@ -24,11 +24,20 @@
 
                             <input type="text" class="form-control" id="input-search" name="input-search" disabled>
                         </div>
-                        <p id="search-text-result" class="font-italic font-weight-bold">Verifica la pagina prima di poter procedere.</p>
+                        <p id="search-text-result" aria-valuenow="0" class="font-italic font-weight-bold">Verifica la pagina prima di poter procedere.</p>
                     </div>
         
-                    <button id="button-verify-page" type="button" class="btn btn-primary">Verifica pagina</button>
-                    <button id="button-visit-profiles" type="button" class="btn btn-primary float-right" disabled>Visita tutti i profili</button>
+                    <div class="form-group">
+                        <button id="button-verify-page" type="button" class="btn btn-primary">Verifica pagina</button>
+                        <button id="button-visit-profiles" type="button" class="btn btn-primary btn-progress float-right" disabled>
+                            Visita tutti i profili
+                            <span class="progress">
+                                <span id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></span>
+                            </span>
+                        </button>
+                    </div>
+
+                    <p id="logs" class="overflow-auto"></p>
                 </div>
             </div>
         </div>

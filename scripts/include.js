@@ -15,7 +15,6 @@ function includeHTML(activeElement) {
                         let doc = new DOMParser().parseFromString(this.responseText, "text/html");
                         let active = doc.getElementById(activeElement);
                         if (active) active.classList.add("active");
-                        console.log(doc);
                         elmnt.innerHTML = doc.body.innerHTML;
                     }
                     if (this.status == 404) { elmnt.innerHTML = "Page not found."; }
@@ -30,5 +29,4 @@ function includeHTML(activeElement) {
             return;
         }
     }
-
 }
