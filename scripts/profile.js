@@ -56,6 +56,9 @@ btnVisitProfiles.onclick = function(element) {
     chrome.runtime.onConnect.addListener(function(port) {
         port.onMessage.addListener(function(msg) {
             if (msg.terminated) {
+                progressbar.setAttribute('aria-valuenow', 0);
+                progressbar.style.width = "0%";
+
                 btnVisitProfiles.disabled = false;
                 return;
             }
