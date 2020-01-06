@@ -79,10 +79,11 @@ function setProfilesFound(num) {
         txtLogs.innerHTML = "";
         progressbar.setAttribute('aria-valuenow', 0);
         progressbar.style.width = "0%";
+        chrome.storage.sync.set({ searching: false, visit_advacement: 0, visted_list: '' });
     }
 }
 
-btnSearch.onclick = async function(element) {
+async function search(element) {
     let href = "https://www.linkedin.com/search/results/people/?";
     href += unescape(txtSearch.value);
     setProfilesFound(0);
@@ -90,10 +91,12 @@ btnSearch.onclick = async function(element) {
     chrome.tabs.query({ active: true, currentWindow: true }, async function(tabs) {
         await goToUrl(tabs[0], href);
     });
-};
 
-btnVerifyPage.onclick = async function(element) {
-    chrome.tabs.query({ active: true, currentWindow: true }, async function(tabs) {
+    verifyPage();
+}
+
+function verifyPage(element) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         let queryText = tabs[0].url.split('?')[1];
         if (!queryText) queryText = "";
         txtSearch.value = queryText;
@@ -110,9 +113,9 @@ btnVerifyPage.onclick = async function(element) {
             setProfilesFound(num);
         });
     });
-};
+} 
 
-btnVisitProfiles.onclick = function(element) {
+function visitProfiles(element) {
     chrome.storage.sync.set({ searching: true });
     btnVisitProfiles.disabled = true;
     var count = 0;
@@ -124,8 +127,8 @@ btnVisitProfiles.onclick = function(element) {
         port.onMessage.addListener(function(msg) {
             if (msg.terminated) {
                 chrome.storage.sync.set({ visit_advacement: 0 });
-                progressbar.setAttribute('aria-valuenow', 0);
-                progressbar.style.width = "0%";
+                progressbar.setAttribute('aria-valuenow', 100);
+                progressbar.style.width = "100%";
 
                 chrome.storage.sync.set({ searching: false });
                 btnVisitProfiles.disabled = false;
@@ -152,5 +155,9 @@ btnVisitProfiles.onclick = function(element) {
         )
     });
 };
+
+btnVerifyPage.onclick = verifyPage;
+btnVisitProfiles.onclick = visitProfiles;
+btnSearch.onclick = search;
 
 restoreState();
