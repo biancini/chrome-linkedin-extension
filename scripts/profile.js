@@ -1,7 +1,7 @@
 includeHTML('profile');
 chrome.storage.sync.set({ current_page: 'profile' });
 
-let btnLinkedIn = document.getElementById('button-linkedin');
+let btnSearch = document.getElementById('button-search');
 let txtLogs = document.getElementById('logs');
 let progressbar = document.getElementById('progress-bar');
 
@@ -43,7 +43,6 @@ function restoreState() {
     });
 }
 
-/*
 function goToUrl(tab, href) {
     chrome.tabs.update(tab.id, {url: href});
 
@@ -56,7 +55,6 @@ function goToUrl(tab, href) {
         });
     });
 }
-*/
 
 function setProfilesFound(num) {
     chrome.storage.sync.set({ profiles_found: num });
@@ -76,9 +74,23 @@ function setProfilesFound(num) {
     }
     else {
         textSearchResult.innerHTML = "Verifica la pagina prima di poter procedere.";
-        btnVisitProfiles.disabled = false;
+        btnVisitProfiles.disabled = true;
+        
+        txtLogs.innerHTML = "";
+        progressbar.setAttribute('aria-valuenow', 0);
+        progressbar.style.width = "0%";
     }
 }
+
+btnSearch.onclick = async function(element) {
+    let href = "https://www.linkedin.com/search/results/people/?";
+    href += unescape(txtSearch.value);
+    setProfilesFound(0);
+
+    chrome.tabs.query({ active: true, currentWindow: true }, async function(tabs) {
+        await goToUrl(tabs[0], href);
+    });
+};
 
 btnVerifyPage.onclick = async function(element) {
     chrome.tabs.query({ active: true, currentWindow: true }, async function(tabs) {
