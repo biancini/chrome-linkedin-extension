@@ -38,7 +38,7 @@ function restoreState() {
             progressbar.setAttribute('aria-valuenow', result.visit_advacement);
             progressbar.style.width = result.visit_advacement + "%";
 
-            txtLogs.innerHTML = result.list_text;
+            txtLogs.innerHTML = result.visted_list;
         }
     });
 }
@@ -58,9 +58,32 @@ function goToUrl(tab, href) {
 }
 */
 
+function setProfilesFound(num) {
+    chrome.storage.sync.set({ profiles_found: num });
+
+    if (num > 1000) { // 100 pages with 10 elements is the maximum number of resutls
+        textSearchResult.classList.add("text-danger");
+        textSearchResult.setAttribute('aria-valuenow', 1000);
+    }
+    else {
+        textSearchResult.classList.remove("text-danger");
+        textSearchResult.setAttribute('aria-valuenow', num);
+    }
+
+    if (num > 0) {
+        textSearchResult.innerHTML = "Trovati " + num.toLocaleString() + " utenti.";
+        btnVisitProfiles.disabled = false;
+    }
+    else {
+        textSearchResult.innerHTML = "Verifica la pagina prima di poter procedere.";
+        btnVisitProfiles.disabled = false;
+    }
+}
+
 btnVerifyPage.onclick = async function(element) {
     chrome.tabs.query({ active: true, currentWindow: true }, async function(tabs) {
         let queryText = tabs[0].url.split('?')[1];
+        if (!queryText) queryText = "";
         txtSearch.value = queryText;
         chrome.storage.sync.set({ search_text: queryText });
 
@@ -68,18 +91,11 @@ btnVerifyPage.onclick = async function(element) {
             var doc = new DOMParser().parseFromString(response.dom, "text/html");
             var results = doc.getElementsByClassName('search-results__total')[0];
 
-            var num = parseInt(results.innerHTML.replace(/[^0-9]/g,''));
-            chrome.storage.sync.set({ profiles_found: num });
-            if (num > 1000) { // 100 pages with 10 elements is the maximum number of resutls
-                textSearchResult.classList.add("text-danger");
-                textSearchResult.setAttribute('aria-valuenow', 1000);
+            var num = 0;
+            if (results) {
+                num = parseInt(results.innerHTML.replace(/[^0-9]/g,''));
             }
-            else {
-                textSearchResult.classList.remove("text-danger");
-                textSearchResult.setAttribute('aria-valuenow', num);
-            }
-            textSearchResult.innerHTML = "Trovati " + num.toLocaleString() + " utenti.";
-            btnVisitProfiles.disabled = false;
+            setProfilesFound(num);
         });
     });
 };
@@ -90,6 +106,7 @@ btnVisitProfiles.onclick = function(element) {
     var count = 0;
     var total = parseInt(textSearchResult.getAttribute('aria-valuenow'));
     chrome.runtime.connect({name: "visitedProfiles"});
+    txtLogs.innerHTML = "";
 
     chrome.runtime.onConnect.addListener(function(port) {
         port.onMessage.addListener(function(msg) {
@@ -100,6 +117,8 @@ btnVisitProfiles.onclick = function(element) {
 
                 chrome.storage.sync.set({ searching: false });
                 btnVisitProfiles.disabled = false;
+
+                chrome.storage.sync.set({ searching: false, visit_advacement: 100 });
                 return;
             }
 
