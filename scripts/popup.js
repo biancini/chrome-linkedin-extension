@@ -40,7 +40,14 @@ btnVerifyPage.onclick = async function(element) {
             var doc = new DOMParser().parseFromString(response.dom, "text/html");
             var results = doc.getElementsByClassName('search-results__total')[0];
 
-            textSearchResult.innerHTML = "Trovati " + results.innerHTML.trim() + ".";
+            var num = parseInt(results.innerHTML.replace(/[^0-9]/g,''));
+            if (num > 1000) { // 100 pages with 10 elements is the maximum number of resutls
+                textSearchResult.classList.add("text-danger");
+            }
+            else {
+                textSearchResult.classList.remove("text-danger");
+            }
+            textSearchResult.innerHTML = "Trovati " + num.toLocaleString() + " utenti.";
             btnVisitProfiles.disabled = false;
         });
     });
