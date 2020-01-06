@@ -1,8 +1,8 @@
-body {
+html {
     width: 500px;
     height: 600px
 }
 
-button {
-    margin: 10px;
+#content  {
+    padding: 12px;
 }

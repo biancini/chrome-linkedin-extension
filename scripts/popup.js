@@ -1,6 +1,8 @@
+includeHTML('popup');
+
 let btnLinkedIn = document.getElementById('button-linkedin');
 
-let btnSearch = document.getElementById('button-search');
+let btnVerifyPage = document.getElementById('button-verify-page');
 let txtSearch = document.getElementById('input-search');
 
 let textSearchResult = document.getElementById('search-text-result');
@@ -26,20 +28,13 @@ function goToUrl(tab, href) {
     });
 }
 
-btnLinkedIn.onclick = async function(element) {
-    let href = "https://www.linkedin.com/";
-    
-    chrome.tabs.query({ active: true, currentWindow: true }, async function(tabs) {
-        await goToUrl(tabs[0], href);
-    });
-};
-
-btnSearch.onclick = async function(element) {
+btnVerifyPage.onclick = async function(element) {
     let href = "https://www.linkedin.com/search/results/people/?keywords=";
     href += escape(txtSearch.value);
     
     chrome.tabs.query({ active: true, currentWindow: true }, async function(tabs) {
-        await goToUrl(tabs[0], href);
+        let queryText = tabs[0].url.split('?')[1];
+        txtSearch.value = queryText;
 
         chrome.tabs.sendMessage(tabs[0].id, {action: "getDOM"}, function(response) {
             var doc = new DOMParser().parseFromString(response.dom, "text/html");
