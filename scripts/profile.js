@@ -1,4 +1,4 @@
-includeHTML('popup');
+includeHTML('profile');
 
 let btnLinkedIn = document.getElementById('button-linkedin');
 
