@@ -2,3 +2,7 @@ html {
     width: 500px;
     height: 600px
 }
+
+#logs {
+    overflow: auto;
+}

@@ -2,10 +2,11 @@ function sleep(milliseconds) {
     return new Promise(r => setTimeout(r, milliseconds));
 }
 
-async function visitUser(name, href, port) {
+async function visitUser(name, href, timeAgo, port) {
     var oReq = new XMLHttpRequest();
     oReq.onload = function() {
-        port.postMessage({ terminated: false, name: name, href: href });
+        // read profile
+        port.postMessage({ terminated: false, name: name, href: href, time: timeAgo });
     };
     oReq.open("get", href, true);
     oReq.send();
@@ -40,9 +41,6 @@ async function run() {
     var port = chrome.runtime.connect({ name: "visitorsList" });
     var scroll = 1000;
 
-    var count = 0;
-    var curCount = 0;
-
     while (process) {
         window.scrollTo(0, scroll);
         scroll += 1000;
@@ -51,11 +49,9 @@ async function run() {
         
         var list = document.querySelector('.me-wvmp-viewers-list');
         var nodes = list.getElementsByClassName('me-wvmp-viewer-card');
+        var names = [];
 
         for (let node of nodes) {
-            count++;
-            while (count < curCount) continue;
-
             var timeAgo = node.getElementsByClassName('me-wvmp-viewer-card__time-ago')[0];
             if (!timeAgo) continue;
             timeAgo = getTimeFromText(timeAgo.innerHTML);
@@ -71,8 +67,12 @@ async function run() {
             if (!link) continue;
             var span = link.getElementsByClassName('me-wvmp-viewer-card__name-text')[0];
             if (!span) continue;
-            await visitUser(span.innerHTML, link.href, port);
-        }
+
+            if (!names.includes(span.innerHTML)) {
+                names.push(span.innerHTML);
+                await visitUser(span.innerHTML, link.href, timeAgo, port);
+            }
+        }   
     }
 
     port.postMessage({ terminated: true });
