@@ -38,7 +38,8 @@ function restoreState() {
             progressbar.setAttribute('aria-valuenow', result.visit_advacement);
             progressbar.style.width = result.visit_advacement + "%";
 
-            txtLogs.innerHTML = result.visted_list;
+            if (result.visted_list)
+                txtLogs.innerHTML = result.visted_list;
         }
     });
 }
@@ -151,7 +152,7 @@ function visitProfiles(element) {
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         chrome.tabs.executeScript(
             tabs[0].id,
-            { file: '/scripts/visit_profiles.js' }
+            { file: '/scripts/pushed/visit_profiles.js' }
         )
     });
 };

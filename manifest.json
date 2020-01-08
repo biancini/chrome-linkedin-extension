@@ -34,5 +34,13 @@
             "js": ["scripts/dom.js"]
         }
     ],
+    "commands": {
+        "_execute_page_action": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+L",
+                "mac": "Ctrl+Shift+L"
+            }
+        }
+    },
     "manifest_version": 2
   }

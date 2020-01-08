@@ -13,18 +13,22 @@
         <div class="container">
             <div class="row">
                 <div class="col col-11 mr-3 ml-3">
-                    <h3>Impostazioni</h3>
-                    <p>Impostazioni dell'estensione LinkedIn Autobot.</p>
+                    <h3>Contatta visitatori</h3>
+                    <p>Funzione che permette di entrare in contatto con chi ha visitato il profilo recentemente.</p>
+                    
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="button" id="button-goto-page">Vai alla lista visitatori</button>
 
-                    <ul>
-                        <li><a href="#" id="btn-clear-cache">Pulisci i dati salvati in cache nel plugin.</a></li>
-                    </ul>
+                        <button class="btn btn-primary float-right" type="button" id="button-get-list" disabled>Scarica lista</button>
+                    </div>
+
+                    <p id="logs"></p>
                 </div>
             </div>
         </div>
     
         <script src="../scripts/include.js"></script>
-        <script src="../scripts/options.js"></script>
+        <script src="../scripts/visitors.js"></script>
         <script src="../vendor/bootstrap-italia.bundle.min.js"></script>
     </body>
 </html>

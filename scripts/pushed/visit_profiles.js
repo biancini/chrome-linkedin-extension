@@ -5,7 +5,7 @@ function sleep(milliseconds) {
 async function visitUser(name, href, port) {
     var oReq = new XMLHttpRequest();
     oReq.onload = function() {
-        port.postMessage({terminated: false, name: name, href: href});
+        port.postMessage({ terminated: false, name: name, href: href });
     };
     oReq.open("get", href, true);
     oReq.send();
@@ -26,7 +26,7 @@ async function moveToNextPage() {
 
 async function run() {
     var process = true;
-    var port = chrome.runtime.connect({name: "visitedProfiles"});
+    var port = chrome.runtime.connect({ name: "visitedProfiles" });
 
     while (process) {
         window.scrollTo(0, document.body.scrollHeight);
@@ -48,7 +48,7 @@ async function run() {
         process = await moveToNextPage();
     }
 
-    port.postMessage({terminated: true});
+    port.postMessage({ terminated: true });
 }
 
 run();
