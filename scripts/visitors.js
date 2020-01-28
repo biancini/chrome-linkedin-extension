@@ -77,7 +77,7 @@ function getVisitorList(element) {
                 return;
             }
             
-            txtLogs.insertAdjacentHTML('beforeend', "Utente <a href=\"" + msg.href + "\">" + msg.name + "</a> <i>(" + getTextFromTime(msg.time) + " fa)</i>.<br/>");
+            txtLogs.insertAdjacentHTML('beforeend', "Utente a distanza " + msg.distance + ": <a href=\"" + msg.href + "\">" + msg.name + "</a> <i>(" + getTextFromTime(msg.time) + " fa)</i>.<br/>");
             chrome.storage.sync.set({ vistor_list: txtLogs.innerHTML });
         });
     });    
@@ -94,3 +94,59 @@ btnGotoPage.onclick = gotoPage;
 btnGetList.onclick = getVisitorList;
 
 restoreState();
+
+
+linkedinLogin();
+
+function linkedinLogin() {
+    var apiKey = '86enstvsx676h0';
+    var redirectUri = 'https://ealgejlegphadajhghjkdkggdonhmnao.chromiumapp.org/linkedin-oauth2/';
+    var state = "sdfiugsdfhkionmdndsfjksd"; //random string
+    var scope = "r_basicprofile%20r_emailaddress";
+
+    var options = {
+        'interactive': true,
+        url: 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code'
+            + '&client_id=' + apiKey
+            + '&scope=' + scope
+            + '&state=' + state
+            + '&redirect_uri=' + redirectUri
+    }
+
+    chrome.identity.launchWebAuthFlow(options, function(redirect_url) {
+        let urlParams = new URLSearchParams(new URL(redirect_url).search);
+        let code = urlParams.get('code');
+
+        var http = new XMLHttpRequest();
+        var url = 'https://www.linkedin.com/oauth/v2/accessToken';
+        var params = 'grant_type=authorization_code';
+        params += '&code=' + code + '&redirect_uri=https%3A%2F%2Fealgejlegphadajhghjkdkggdonhmnao.chromiumapp.org%2Flinkedin-oauth2%2F&';
+        params += 'client_id=86enstvsx676h0&client_secret=geOlFIVLLAX5o4qO';
+        
+        http.open('POST', url, true);
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        http.onreadystatechange = function() {
+            if (http.readyState == 4 && http.status == 200) {
+                let resp = JSON.parse(http.responseText);
+                getProfileData(resp.access_token);
+            }
+        }
+        http.send(params);
+    });
+}
+
+function getProfileData(access_token) {
+    let userId = "filippo-visentin-82aa3745";
+    let url = "https://api.linkedin.com/v2/people/(id:" + userId + ")";
+
+    var request = new XMLHttpRequest(); 
+    request.open("GET", url);
+    request.setRequestHeader('Authorization', 'Bearer ' + access_token);
+    request.onreadystatechange = function() { 
+        if (request.readyState === 4 && request.status === 200) {
+            console.log(request);
+        }
+    };
+    request.send(null);
+}

@@ -2,15 +2,20 @@ function sleep(milliseconds) {
     return new Promise(r => setTimeout(r, milliseconds));
 }
 
-async function visitUser(name, href, timeAgo, port) {
-    var oReq = new XMLHttpRequest();
-    oReq.onload = function() {
-        // read profile
-        port.postMessage({ terminated: false, name: name, href: href, time: timeAgo });
-    };
-    oReq.open("get", href, true);
-    oReq.send();
+async function visitUser(name, href, distance, timeAgo, port) {
+    var dist = parseInt(distance.replace(/[^0-9]/g,''));
 
+    if (dist > 1) {
+        var oReq = new XMLHttpRequest();
+        oReq.onload = function() {
+            // read profile
+            port.postMessage({ terminated: false, name: name, distance: dist, href: href, time: timeAgo, visited: true });
+        };
+        oReq.open("get", href, true);
+        oReq.send();
+    }
+
+    port.postMessage({ terminated: false, name: name, distance: dist, href: href, time: timeAgo, visited: false });
     await sleep(200);
 }
 
@@ -67,10 +72,12 @@ async function run() {
             if (!link) continue;
             var span = link.getElementsByClassName('me-wvmp-viewer-card__name-text')[0];
             if (!span) continue;
+            var distance = link.getElementsByClassName('distance-badge')[0];
+            if (!distance) continue;
 
             if (!names.includes(span.innerHTML)) {
                 names.push(span.innerHTML);
-                await visitUser(span.innerHTML, link.href, timeAgo, port);
+                await visitUser(span.innerHTML, link.href, distance.innerHTML, timeAgo, port);
             }
         }   
     }
